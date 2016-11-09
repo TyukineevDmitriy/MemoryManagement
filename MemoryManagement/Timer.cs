@@ -16,7 +16,7 @@ namespace MemoryManagement
         }
         public Timer Continue()
         {
-            Start();
+            base.Start();
             return this;
         }
     }
