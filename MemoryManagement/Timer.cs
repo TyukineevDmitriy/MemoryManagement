@@ -3,25 +3,20 @@ using System.Diagnostics;
 
 namespace MemoryManagement
 {
-    public class Timer : IDisposable
+    public class Timer : Stopwatch, IDisposable
     {
-        private Stopwatch Stopwatch;
-        public long ElapsedMilliseconds { get; set; }
-
-        public Timer Start()
+        public new Timer Start()
         {
-            Stopwatch = new Stopwatch();
-            Stopwatch.Start();
+            base.Start();
             return this;
         }
         public void Dispose()
         {
-            ElapsedMilliseconds = Stopwatch.ElapsedMilliseconds;
-            Stopwatch.Stop();
+            Stop();
         }
         public Timer Continue()
         {
-            Stopwatch.Start();
+            Start();
             return this;
         }
     }

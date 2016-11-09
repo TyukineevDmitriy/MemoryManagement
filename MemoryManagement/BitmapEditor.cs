@@ -13,27 +13,54 @@ namespace MemoryManagement
     {
         private Bitmap Bitmap;
         private BitmapData BmpData;
+        IntPtr Ptr;
+        int NumBytes;
+        byte[] RGBValues;
         public BitmapEditor(Bitmap bitmap)
         {
             Bitmap = bitmap;
             Rectangle rect = new Rectangle(0, 0, Bitmap.Width, Bitmap.Height);
             BmpData = Bitmap.LockBits(rect, ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
+            Ptr = BmpData.Scan0;
+            NumBytes = BmpData.Stride * Bitmap.Height;
+            RGBValues = new byte[NumBytes];
+            Marshal.Copy(Ptr, RGBValues, 0, NumBytes);
+            
         }
         public void SetPixel(int x, int y, byte red, byte green, byte blue)
         {
-            IntPtr ptr = BmpData.Scan0;
-            int numBytes = BmpData.Stride * Bitmap.Height;
-            byte[] rgbValues = new byte[numBytes];
-            Marshal.Copy(ptr, rgbValues, 0, numBytes);
             int coordinates = x * 3 + Bitmap.Width * y * 3;
-            rgbValues[coordinates] = blue;
-            rgbValues[coordinates + 1] = green;
-            rgbValues[coordinates + 2] = red;
-            Marshal.Copy(rgbValues, 0, ptr, numBytes);
+            RGBValues[coordinates] = blue;
+            RGBValues[coordinates + 1] = green;
+            RGBValues[coordinates + 2] = red;
         }
+
+        #region IDisposable Support
+        private bool disposedValue = false;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    Marshal.Copy(RGBValues, 0, Ptr, NumBytes);
+                    Bitmap.UnlockBits(BmpData);
+                }
+                disposedValue = true;
+            }
+        }
+        
+        ~BitmapEditor()
+        {
+            Dispose(false);
+        }
+        
         public void Dispose()
         {
-            Bitmap.UnlockBits(BmpData);
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
+        #endregion
     }
 }

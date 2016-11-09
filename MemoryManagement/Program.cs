@@ -11,7 +11,7 @@ namespace MemoryManagement
     {
         static void Main(string[] args)
         {
-            var bitmap = (Bitmap)Bitmap.FromFile(@"..\..\image1.png");
+            var bitmap = (Bitmap)Bitmap.FromFile(@"..\..\kok.bmp");
             var timer = new Timer();
             using (timer.Start())
             {
@@ -25,6 +25,7 @@ namespace MemoryManagement
                 }
             }
             Console.WriteLine(timer.ElapsedMilliseconds);
+            Console.WriteLine(timer.ElapsedTicks);
             using (timer.Continue())
             {
                 using (var bitmapEditor = new BitmapEditor(bitmap))
@@ -37,6 +38,7 @@ namespace MemoryManagement
                 }
             }
             Console.WriteLine(timer.ElapsedMilliseconds);
+            Console.WriteLine(timer.ElapsedTicks);
             bitmap.Save(@"..\..\image2.png", ImageFormat.Png);
         }
     }
