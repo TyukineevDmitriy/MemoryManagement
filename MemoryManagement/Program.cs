@@ -13,7 +13,7 @@ namespace MemoryManagement
         {
             var bitmap = (Bitmap)Bitmap.FromFile(@"..\..\kok.bmp");
             var timer = new Timer();
-            using (timer.Start())
+            using (timer.StartOver())
             {
                 using (var bitmapEditor = new BitmapEditor(bitmap))
                 {
